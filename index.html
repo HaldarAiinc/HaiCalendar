@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaiCalendar</title>
+    <meta name="Keywords" content="Indian Calendar 2026,Online Calendar,Free Calendar App,Web Calendar,Digital Clock">
+    <meta name="Description" content="HaldarAi presents HaiCalendar. No signup, just privacy.">
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
+    <!-- Google Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Poppins for modern UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body Styles - New Glassmorphism Theme */
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            padding-bottom: 85px; /* Space for the fixed footer */
+            background: linear-gradient(135deg, #a0c2e3 0%, #4a72e0 50%, #1e3a8a 100%);
+            background-attachment: fixed; /* Keep gradient fixed during scroll */
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Page container styles */
+        .page {
+            display: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* --- Glassmorphism Effect Base --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15); /* Semi-transparent background */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* For Safari */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Soft shadow */
+        }
+        
+        /* Calendar Header Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 12px;
+            border-radius: 16px; /* Rounded corners */
+        }
+
+        .calendar-header .nav-button {
+            background-color: #4A80E8; /* Solid blue from image */
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .calendar-header .nav-button .material-icons {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .calendar-header .nav-button:hover {
+            background-color: #6a95f0; /* Lighter blue on hover */
+            transform: scale(1.1);
+        }
+        .calendar-header .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        .calendar-header h2 {
+            margin: 0 10px;
+            font-size: 1.4em;
+            font-weight: 600;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        /* Language Toggle - Hidden as it is not part of the new design */
+        .lang-toggle {
+            display: none;
+        }
+        
+        /* Calendar Grid Styles */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px; /* Slightly larger gap */
+            text-align: center;
+        }
+
+        .calendar-grid .weekday {
+            font-weight: 500;
+            color: #d1d1d1; /* Lighter text for weekdays */
+            padding-bottom: 10px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+        }
+
+        .calendar-grid .day {
+            padding: 12px 5px;
+            border-radius: 12px; /* Consistent rounding */
+            font-size: 1em;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1; /* Make days square */
+        }
+
+        .calendar-grid .day:hover:not(.other-month) {
+            transform: scale(1.05);
+        }
+
+        .day.today {
+            background: #ffffff !important; /* Solid white background */
+            color: #1e3a8a !important; /* Dark blue text */
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3); /* White glow */
+        }
+        
+        .day.selected {
+            box-shadow: 0 0 15px rgba(74, 128, 232, 0.8); /* Blue glow for selected */
+            transform: scale(1.05);
+        }
+
+        .day.other-month {
+            opacity: 0.2; /* Heavily fade out other month days */
+            pointer-events: none;
+        }
+        
+        /* Day Details Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            color: #eee;
+            background: rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        #date-details-content h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+            margin-top: 20px;
+        }
+        
+        /* Time Page Styles */
+        .time-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+            text-align: center;
+        }
+
+        #digital-clock {
+            padding: 30px 40px;
+            border-radius: 16px;
+            color: #ffffff;
+            letter-spacing: 2px;
+        }
+
+        .time-main-display {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        #time-display {
+            font-size: 5em;
+            font-weight: 600;
+            text-shadow: 0 0 15px rgba(74, 128, 232, 0.8);
+        }
+
+        #ampm-display {
+            font-size: 1.8em;
+            font-weight: 500;
+            margin-left: 10px;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        #date-display, #day-display {
+            font-size: 1.3em;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+        }
+
+        /* Footer Navigation Styles */
+        .footer-nav {
+            position: fixed;
+            bottom: 15px; /* Floating above the bottom */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px; /* Max width for larger screens */
+            display: flex;
+            justify-content: space-around;
+            padding: 8px;
+            border-radius: 16px;
+            z-index: 1000;
+        }
+
+        .footer-nav a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            position: relative;
+            user-select: none;
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        .footer-nav a .material-icons {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        
+        .footer-nav a.active {
+            background-color: #4A80E8; /* Solid blue for active */
+            color: #ffffff;
+            opacity: 1;
+            transform: translateY(-5px); /* Lift active icon */
+            box-shadow: 0 5px 15px rgba(74, 128, 232, 0.4); /* Blue glow */
+        }
+        
+        .footer-nav a:not(.active):hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            body { padding: 10px; padding-bottom: 85px; }
+            .calendar-grid { gap: 5px; }
+            .calendar-grid .day { padding: 10px 5px; border-radius: 8px; }
+            #time-display { font-size: 4em; }
+            #ampm-display { font-size: 1.5em; padding-bottom: 8px; }
+            #date-display, #day-display { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen (Hidden for this example, but logic is still there) -->
+    <div id="loading-screen" style="display: none;">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Page: Home (Calendar) -->
+    <div id="home-page" class="page active">
+        <div class="calendar-header glass-card">
+            <button id="prev-month-btn" class="nav-button" aria-label="Previous Month">
+                <span class="material-icons">arrow_back_ios</span>
+            </button>
+            <h2 id="month-year-header"></h2>
+            <div class="lang-toggle">
+                <button id="english-btn" class="active">English</button>
+            </div>
+            <button id="next-month-btn" class="nav-button" aria-label="Next Month">
+                <span class="material-icons">arrow_forward_ios</span>
+            </button>
+        </div>
+        <div class="calendar-grid" id="calendar-weekdays"></div>
+        <div class="calendar-grid" id="calendar-days"></div>
+    </div>
+    
+    <!-- Page: Time -->
+    <div id="time-page" class="page">
+        <div class="time-container">
+            <div id="digital-clock" class="glass-card">
+                <div class="time-main-display">
+                    <div id="time-display"></div>
+                    <div id="ampm-display"></div>
+                </div>
+                <div id="date-display"></div>
+                <div id="day-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Details Modal -->
+    <div id="date-details-modal" class="modal">
+        <div class="modal-content glass-card">
+            <span class="close-btn">&times;</span>
+            <div id="date-details-content"></div>
+        </div>
+    </div>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav glass-card">
+        <a id="nav-home" class="active">
+            <span class="material-icons">event</span>
+            Home
+        </a>
+        <a id="nav-time">
+            <span class="material-icons">schedule</span>
+            Time
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // JavaScript logic remains the same as previous versions
+            // This is purely a UI/UX update via CSS
+            
+            // --- Global DOM Elements ---
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.footer-nav a');
+            const loadingScreen = document.getElementById('loading-screen');
+            const calendarDaysGrid = document.getElementById('calendar-days'); 
+            
+            const holidays = { '01-01': ['New Year\'s Day'], '01-26': ['Republic Day (National Holiday)'], '08-15': ['Independence Day (National Holiday)'], '10-02': ['Gandhi Jayanti (National Holiday)'], '12-25': ['Christmas Day'] };
+            const historicalEvents = { '01-26': ['Constitution of India came into force (1950)'], '08-15': ['India gained independence (1947)'] };
+            const IndianSeasons = { 0: 'Winter', 1: 'Winter', 2: 'Spring', 3: 'Spring', 4: 'Summer', 5: 'Summer', 6: 'Monsoon', 7: 'Monsoon', 8: 'Autumn', 9: 'Autumn', 10: 'Pre-Winter', 11: 'Pre-Winter' };
+
+            // --- Loading Screen ---
+            window.addEventListener('load', () => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => { loadingScreen.style.display = 'none'; }, 500);
+            });
+
+            // --- Navigation Logic ---
+            function showPage(pageId) {
+                pages.forEach(page => page.classList.remove('active'));
+                navLinks.forEach(link => link.classList.remove('active'));
+
+                document.getElementById(pageId).classList.add('active');
+                document.getElementById(`nav-${pageId.split('-')[0]}`).classList.add('active');
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const pageId = `${link.id.split('-')[1]}-page`;
+                    showPage(pageId);
+                });
+            });
+
+            // --- Home Page (Calendar) Logic ---
+            (function setupCalendar() {
+                const monthYearHeader = document.getElementById('month-year-header');
+                const calendarWeekdaysGrid = document.getElementById('calendar-weekdays');
+                const prevMonthBtn = document.getElementById('prev-month-btn');
+                const nextMonthBtn = document.getElementById('next-month-btn');
+                const dateDetailsModal = document.getElementById('date-details-modal');
+                const dateDetailsContent = document.getElementById('date-details-content');
+                const closeModalBtn = document.querySelector('.close-btn');
+
+                let currentDate = new Date();
+                
+                const englishWeekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                function renderCalendar() {
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth();
+                    const today = new Date();
+                    
+                    monthYearHeader.textContent = `${currentDate.toLocaleString('en-US', { month: 'long' })} ${year}`;
+                    calendarWeekdaysGrid.innerHTML = englishWeekdays.map(day => `<div class="weekday">${day}</div>`).join('');
+                    
+                    calendarDaysGrid.innerHTML = '';
+                    const firstDayOfMonth = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    for (let i = 0; i < firstDayOfMonth; i++) calendarDaysGrid.insertAdjacentHTML('beforeend', `<div class="day glass-card other-month"></div>`);
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const dayElement = document.createElement('div');
+                        dayElement.classList.add('day', 'glass-card');
+                        dayElement.dataset.day = i;
+                        dayElement.textContent = i;
+                        
+                        if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                            dayElement.classList.add('today');
+                        }
+                        calendarDaysGrid.appendChild(dayElement);
+                    }
+                }
+
+                function openDateDetailsModal(day) {
+                    const selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                    const gregorianDateString = selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    const holidayKey = `${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayHolidays = holidays[holidayKey];
+                    const dayHistoricalEvents = historicalEvents[holidayKey];
+                    const currentSeason = IndianSeasons[selectedDate.getMonth()];
+
+                    let eventsHtml = '<h3>Festivals & Events</h3>';
+                    if (dayHolidays) {
+                        eventsHtml += `<ul>${dayHolidays.map(h => `<li>${h}</li>`).join('')}</ul>`;
+                    } else {
+                        eventsHtml += '<p>No notable events or holidays.</p>';
+                    }
+                    
+                    dateDetailsContent.innerHTML = `
+                        <p style="text-align: center; font-size: 1.2em; font-weight: 600;">${gregorianDateString}</p>
+                        <h3>Season</h3>
+                        <p>${currentSeason}</p>
+                        ${eventsHtml}
+                    `;
+                    dateDetailsModal.style.display = 'flex';
+                }
+                
+                prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+                nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
+                
+                calendarDaysGrid.addEventListener('click', (e) => {
+                    const clickedDay = e.target.closest('.day');
+                    if (clickedDay && !clickedDay.classList.contains('other-month')) {
+                        document.querySelector('.day.selected')?.classList.remove('selected');
+                        clickedDay.classList.add('selected');
+                        openDateDetailsModal(clickedDay.dataset.day);
+                    }
+                });
+                
+                closeModalBtn.addEventListener('click', () => dateDetailsModal.style.display = 'none');
+                window.addEventListener('click', (e) => { if (e.target == dateDetailsModal) dateDetailsModal.style.display = 'none'; });
+
+                renderCalendar();
+
+                let touchStartX = 0;
+                let touchEndX = 0;
+                const minSwipeDistance = 50; 
+
+                // BUG FIX IS HERE
+                calendarDaysGrid.addEventListener('touchstart', (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchEndX = e.touches[0].clientX; // This line was added to fix the bug
+                }, { passive: true });
+
+                calendarDaysGrid.addEventListener('touchmove', (e) => {
+                    touchEndX = e.touches[0].clientX;
+                }, { passive: true });
+
+                calendarDaysGrid.addEventListener('touchend', () => {
+                    if (touchStartX - touchEndX > minSwipeDistance) {
+                        nextMonthBtn.click();
+                    } else if (touchEndX - touchStartX > minSwipeDistance) {
+                        prevMonthBtn.click();
+                    }
+                    // No need to reset variables here as they are reset on the next touchstart
+                });
+            })();
+
+            // --- Time Page Logic ---
+            (function setupTimePage() {
+                const timeDisplay = document.getElementById('time-display');
+                const ampmDisplay = document.getElementById('ampm-display');
+                const dateDisplay = document.getElementById('date-display');
+                const dayDisplay = document.getElementById('day-display');
+
+                function updateClock() {
+                    const now = new Date();
+                    const fullTimeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+                    const [timePart, ampmPart] = fullTimeString.split(' ');
+                    
+                    timeDisplay.textContent = timePart;
+                    ampmDisplay.textContent = ampmPart;
+                    dateDisplay.textContent = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    dayDisplay.textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
+                }
+                setInterval(updateClock, 1000);
+                updateClock();
+            })();
+        });
+    </script>
+
+</body>
+</html>
