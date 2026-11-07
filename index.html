@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HaiCalendar</title>
+<meta name="Keywords" content="Indian Calendar 2026,Indian Calendar 2027,Indian Holidays,Indian Festivals,Online Calendar,Free Calendar App,Digital Clock">
+<meta name="Description" content="HaldarAi presents HaiCalendar: Indian holidays, West Bengal holidays and Bengali festivals for 2026 and 2027. No signup, just privacy.">
+<meta name="theme-color" content="#4d43fe">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('hai-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+:root{
+--p-50:#d7ecff;--p-100:#c9dfff;--p-200:#b5cbff;--p-300:#9aadff;--p-400:#7985ff;--p-500:#5f60ff;--p-600:#4d43fe;--p-700:#3d33d3;--p-800:#3124b4;--p-900:#271898;--p-950:#14055f;
+--n-50:#f5f5f5;--n-100:#eaeaea;--n-200:#d9d9d9;--n-300:#c0c0c0;--n-400:#9f9f9f;--n-500:#828282;--n-600:#6c6c6c;--n-700:#575757;--n-800:#464646;--n-900:#393939;--n-950:#1b1b1b;
+--wash:#eef4fe;--wash-2:#e0eaff;--line:#eaecf0;
+--r-md:10px;--r-lg:16px;--r-xl:20px;--r-full:9999px;
+--sh-xs:rgba(74,58,255,.1) 0 6px 16px 0;--sh-sm:rgba(41,30,255,.45) 0 8px 28px 0;
+--f-ui:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;--f-disp:'Anek Latin','Figtree',system-ui,sans-serif;
+--ease:cubic-bezier(.2,.9,.3,1.15);
+}
+[data-theme=light]{--bg:var(--wash);--surf:#fff;--fg:var(--n-950);--fg-2:var(--n-600);--acc:var(--p-600);--acc-t:var(--p-600);--acc-soft:var(--wash-2);--ln:var(--line)}
+[data-theme=dark]{--bg:#0f0f12;--surf:var(--n-950);--fg:#fff;--fg-2:#b4b4c2;--acc:var(--p-600);--acc-t:var(--p-300);--acc-soft:#25225a;--ln:#2e2e36}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+html{-webkit-tap-highlight-color:transparent}
+body{font:400 16px/1.45 var(--f-ui);background:var(--bg);color:var(--fg);min-height:100vh;padding:max(16px,env(safe-area-inset-top)) 16px calc(104px + env(safe-area-inset-bottom));transition:background .3s,color .3s}
+#app{max-width:960px;margin:0 auto}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--acc-t);outline-offset:2px}
+.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:4px 0 18px}
+.brand{display:flex;align-items:center;gap:10px;font:700 22px var(--f-disp);letter-spacing:-.01em}
+.logo{width:36px;height:36px;border-radius:var(--r-md);background:var(--acc);color:#fff;display:grid;place-items:center;box-shadow:var(--sh-xs)}
+.logo .i{width:20px;height:20px}
+.icon-btn{width:44px;height:44px;border-radius:var(--r-full);background:var(--surf);display:grid;place-items:center;box-shadow:var(--sh-xs);transition:transform .2s var(--ease)}
+.icon-btn:active{transform:scale(.88)}
+.icon-btn.spin .i{animation:spin .5s var(--ease)}
+@keyframes spin{from{transform:rotate(-120deg) scale(.4);opacity:0}}
+.view{animation:vin .35s var(--ease)}
+@keyframes vin{from{opacity:0;transform:translateY(10px)}}
+.cal-wrap{display:grid;gap:16px}
+@media(min-width:860px){.cal-wrap{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start}}
+.card{background:var(--surf);border-radius:var(--r-xl);padding:20px;box-shadow:var(--sh-xs)}
+.head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.ttl{flex:1;font:700 32px/1.05 var(--f-disp);letter-spacing:-.02em}
+.ttl small{display:block;font:500 15px var(--f-ui);color:var(--fg-2);letter-spacing:0;margin-top:2px}
+.nav-btn{width:40px;height:40px;border-radius:var(--r-full);background:var(--acc-soft);color:var(--acc-t);display:grid;place-items:center;transition:transform .2s var(--ease),background .2s,color .2s}
+.nav-btn:hover{background:var(--acc);color:#fff}
+.nav-btn:active{transform:scale(.85)}
+.today-btn{height:40px;padding:0 16px;border-radius:var(--r-full);background:var(--acc);color:#fff;font-weight:600;font-size:14px;box-shadow:var(--sh-xs);opacity:0;pointer-events:none;transform:scale(.8);transition:.25s var(--ease)}
+.today-btn.show{opacity:1;pointer-events:auto;transform:none}
+.wd,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.wd{font:600 13px var(--f-ui);color:var(--fg-2);margin-bottom:8px}
+.grid.s-n{animation:sn .35s var(--ease)}.grid.s-p{animation:sp .35s var(--ease)}
+@keyframes sn{from{opacity:0;transform:translateX(28px)}}
+@keyframes sp{from{opacity:0;transform:translateX(-28px)}}
+.day{position:relative;aspect-ratio:1;border-radius:var(--r-md);font:600 16px var(--f-ui);display:grid;place-items:center;transition:background .2s,transform .2s var(--ease)}
+.day:hover{background:var(--acc-soft)}
+.day:active{transform:scale(.88)}
+.day.sun{color:var(--acc-t)}
+.day.sel{box-shadow:inset 0 0 0 2px var(--acc-t)}
+.day.today{background:var(--acc);color:#fff;box-shadow:var(--sh-sm)}
+.day.today:hover{background:var(--p-700)}
+.day.today.sel{box-shadow:var(--sh-sm),0 0 0 3px var(--surf),0 0 0 5px var(--acc)}
+.day.today::after{content:'';position:absolute;inset:0;border-radius:inherit;animation:ring 1.6s 1s 2 ease-out}
+@keyframes ring{from{box-shadow:0 0 0 0 rgba(77,67,254,.6)}to{box-shadow:0 0 0 16px rgba(77,67,254,0)}}
+.dot{position:absolute;bottom:15%;width:5px;height:5px;border-radius:50%;background:var(--acc-t)}
+.dot.g{background:#e5484d}
+.dot.o{background:var(--fg-2);opacity:.5}
+.dot.w{background:#e8a317}
+.tag.w{background:rgba(232,163,23,.2);color:#8a5a00}
+[data-theme=dark] .tag.w{color:#f5c451}
+.seg{display:flex;gap:4px;padding:4px;margin-top:16px;background:var(--acc-soft);border-radius:var(--r-full)}
+.seg button{flex:1;height:40px;border-radius:var(--r-full);font-weight:600;color:var(--fg-2);transition:background .25s,color .25s}
+.seg button.on{background:var(--acc);color:#fff;box-shadow:var(--sh-xs)}
+.day.today .dot{background:#fff;opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:16px;font-size:13px;color:var(--fg-2)}
+.legend .dot{position:static;display:inline-block;margin-right:6px}
+.side{display:grid;gap:16px}
+.row div{flex:1;min-width:0}
+.tag{margin-left:auto;flex:none;font:600 12px var(--f-ui);padding:3px 10px;border-radius:var(--r-full);background:var(--acc-soft);color:var(--acc-t)}
+.tag.g{background:rgba(229,72,77,.14);color:#cf2f34}
+.tag.o{background:transparent;box-shadow:inset 0 0 0 1px var(--ln);color:var(--fg-2)}
+[data-theme=dark] .tag.g{color:#ff8e92}
+.blk li .tag{margin-left:8px}
+.blk li.mut{font-weight:400}
+.fine{font-size:13px;padding-top:12px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;width:100%}
+.facts div{background:rgba(255,255,255,.07);border-radius:var(--r-lg);padding:12px 14px}
+.facts dt{font-size:13px;color:#b4b4c2}
+.facts dd{font-weight:600;margin:2px 0 0}
+.grid.intro .day{animation:pop .5s var(--ease) both;animation-delay:calc(var(--i)*35ms)}
+@keyframes pop{from{opacity:0;transform:scale(.4)}}
+.up h2{font:700 22px var(--f-disp);margin-bottom:8px}
+.row{display:flex;align-items:center;gap:14px;width:calc(100% + 20px);margin:0 -10px;padding:10px;text-align:left;border-radius:var(--r-lg);transition:background .2s}
+.row:hover{background:var(--acc-soft)}
+.badge{width:48px;height:52px;border-radius:var(--r-md);background:var(--acc-soft);color:var(--acc-t);display:grid;place-content:center;text-align:center;font:700 20px/1 var(--f-disp)}
+.badge small{display:block;font:600 12px var(--f-ui);margin-top:3px}
+.row b{display:block;font-weight:600}
+.row em{font-style:normal;color:var(--fg-2);font-size:14px}
+.note{color:var(--fg-2);font-size:14px;margin-top:14px;max-width:34ch}
+.clock{position:relative;overflow:hidden;background:var(--n-950);color:#fff;border-radius:var(--r-xl);padding:32px 20px;display:grid;gap:26px;justify-items:center;max-width:560px;margin:0 auto;box-shadow:var(--sh-sm)}
+.clock::before{content:'';position:absolute;width:360px;height:360px;top:-130px;left:50%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(77,67,254,.55),transparent);pointer-events:none}
+.clock>*{position:relative}
+.face{width:min(260px,70vw);height:auto}
+.digital{display:flex;align-items:baseline;gap:8px;font:700 64px/1 var(--f-disp);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.digital .sec{font-size:28px;color:var(--p-300);display:inline-block}
+.digital .ap{font:600 18px var(--f-ui);color:var(--p-300)}
+.sec.pop{animation:tick .4s var(--ease)}
+@keyframes tick{from{transform:translateY(8px);opacity:.3}}
+.dl{text-align:center}
+.dl b{display:block;font:700 24px var(--f-disp)}
+.dl span{color:#b4b4c2}
+.bars{display:grid;gap:14px;width:100%;max-width:420px}
+.bar label{display:flex;justify-content:space-between;font-size:14px;color:#b4b4c2;margin-bottom:6px}
+.bar i{display:block;height:8px;border-radius:var(--r-full);background:rgba(255,255,255,.12);overflow:hidden}
+.bar i b{display:block;height:100%;width:0;background:var(--p-400);border-radius:inherit}
+.dock{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(320px,calc(100% - 32px));display:flex;padding:6px;border-radius:var(--r-full);background:var(--n-950);box-shadow:0 12px 32px rgba(20,5,95,.35);z-index:5}
+[data-theme=dark] .dock{background:#26262b}
+.dock button{position:relative;z-index:1;flex:1;height:52px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;gap:8px;color:#c9c9d6;font-weight:600;transition:color .25s}
+.dock button[aria-current=page]{color:#fff}
+.ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:var(--r-full);background:var(--acc);box-shadow:var(--sh-sm);transition:transform .4s var(--ease)}
+.dock[data-v=time] .ind{transform:translateX(100%)}
+.scrim{position:fixed;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,5,95,.5);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);visibility:hidden;opacity:0;transition:opacity .25s,visibility 0s .25s}
+.scrim.open{visibility:visible;opacity:1;transition:opacity .25s}
+.sheet{width:min(520px,100%);max-height:88vh;overflow:auto;background:var(--surf);color:var(--fg);border-radius:var(--r-xl) var(--r-xl) 0 0;transform:translateY(100%);transition:transform .45s var(--ease);padding-bottom:env(safe-area-inset-bottom)}
+.open .sheet{transform:none}
+@media(min-width:640px){.scrim{align-items:center}.sheet{border-radius:var(--r-xl);transform:translateY(24px) scale(.95);opacity:0;transition:transform .4s var(--ease),opacity .25s}.open .sheet{opacity:1}}
+.hero{position:relative;background:var(--acc);color:#fff;padding:26px 56px 24px 24px;display:flex;align-items:center;gap:18px}
+.num{font:700 72px/.9 var(--f-disp);letter-spacing:-.03em}
+.hero h2{font:700 24px/1.2 var(--f-disp)}
+.hero p{opacity:.92}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{background:rgba(255,255,255,.2);border-radius:var(--r-full);padding:3px 12px;font-size:13px;font-weight:600}
+.x{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;display:grid;place-items:center;transition:transform .25s var(--ease)}
+.x:hover{transform:rotate(90deg)}
+.sbody{padding:8px 24px 24px}
+.blk{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--ln)}
+.blk:last-child{border:0;padding-bottom:0}
+.blk .i{color:var(--acc-t);margin-top:2px}
+.blk h3{font:600 14px var(--f-ui);color:var(--fg-2);margin-bottom:2px}
+.blk li{list-style:none;font-weight:600}
+.mut{color:var(--fg-2)}
+@media(max-width:380px){.ttl{font-size:27px}.num{font-size:60px}.digital{font-size:54px}}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-l" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="i-r" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.2-6.2 3.2L7 14.2l-5-4.9 6.9-1z"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+<symbol id="i-flake" viewBox="0 0 24 24"><path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7"/></symbol>
+<symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 12C12 8 9 5 5 5c0 4 3 7 7 7Z"/><path d="M12 15c0-3 2.5-5.5 7-5.5 0 3.5-2.5 5.5-7 5.5Z"/></symbol>
+<symbol id="i-rain" viewBox="0 0 24 24"><path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9"/><path d="M16 14v6M8 14v6M12 16v6"/></symbol>
+<symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
+<symbol id="i-wind" viewBox="0 0 24 24"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2M9.6 4.6A2 2 0 1 1 11 8H2m10.6 11.4A2 2 0 1 0 14 16H2"/></symbol>
+</defs></svg>
+
+<div id="app">
+<header class="top">
+  <div class="brand"><span class="logo"><svg class="i"><use href="#i-cal"/></svg></span>HaiCalendar</div>
+  <button id="theme" class="icon-btn" aria-label="Switch theme"></button>
+</header>
+<main>
+<section id="v-cal" class="view cal-wrap">
+  <div class="card">
+    <div class="head">
+      <h1 class="ttl" id="ttl" aria-live="polite"></h1>
+      <button class="today-btn" id="tb">Today</button>
+      <button class="nav-btn" id="prev" aria-label="Previous month"><svg class="i"><use href="#i-l"/></svg></button>
+      <button class="nav-btn" id="next" aria-label="Next month"><svg class="i"><use href="#i-r"/></svg></button>
+    </div>
+    <div class="wd" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+    <div class="grid intro" id="grid"></div>
+    <div class="seg" role="group" aria-label="Show events for"><button class="on" data-s="all" aria-pressed="true">All India</button><button data-s="wb" aria-pressed="false">West Bengal</button></div>
+    <div class="legend"><span><i class="dot g"></i>Public holiday</span><span><i class="dot w"></i>West Bengal holiday</span><span><i class="dot r"></i>Optional or festival</span><span><i class="dot o"></i>Observance</span></div>
+  </div>
+  <div class="side"><aside class="card up">
+    <h2>Coming up</h2>
+    <div id="up-list"></div>
+    <p class="note">Central holidays follow the DoPT lists for 2026 and 2027. West Bengal holidays follow the state Finance Department list for 2026; the 2027 list is not out yet, so Bengal dates marked expected may change. Moon-sighting dates can shift by a day. No signup, no tracking: everything stays on your device.</p>
+  </aside>
+  <aside class="card up"><h2 id="mo-t"></h2><div id="mo-list"></div></aside></div>
+</section>
+<section id="v-time" class="view" hidden>
+  <div class="clock">
+    <svg class="face" viewBox="0 0 200 200" role="img" aria-label="Analog clock">
+      <circle cx="100" cy="100" r="96" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.14)"/>
+      <g id="ticks"></g>
+      <line id="hh" x1="100" y1="100" x2="100" y2="62" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+      <line id="mh" x1="100" y1="100" x2="100" y2="38" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      <line id="ss" x1="100" y1="114" x2="100" y2="26" stroke="#9aadff" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="100" cy="100" r="6" fill="#5f60ff" stroke="#1b1b1b" stroke-width="2"/>
+    </svg>
+    <div class="digital"><span id="hm"></span><span class="sec" id="sec"></span><span class="ap" id="ap"></span></div>
+    <div class="dl"><b id="dl-b"></b><span id="dl-s"></span></div>
+    <dl class="facts"><div><dt>Saka date</dt><dd id="f-sk"></dd></div><div><dt>Sunrise, sunset</dt><dd id="f-sun"></dd></div><div><dt>Moon</dt><dd id="f-mn"></dd></div><div><dt>Bangabda</dt><dd id="f-bn"></dd></div></dl>
+    <div class="bars">
+      <div class="bar"><label><span>Today</span><span id="dp"></span></label><i><b id="db"></b></i></div>
+      <div class="bar"><label><span id="yl"></span><span id="yp"></span></label><i><b id="yb"></b></i></div>
+    </div>
+  </div>
+</section>
+</main>
+<nav class="dock" id="dock" data-v="cal" aria-label="Main">
+  <span class="ind"></span>
+  <button data-v="cal" aria-current="page"><svg class="i"><use href="#i-cal"/></svg>Calendar</button>
+  <button data-v="time"><svg class="i"><use href="#i-clock"/></svg>Time</button>
+</nav>
+</div>
+
+<div class="scrim" id="scrim">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+    <div class="hero">
+      <div class="num" id="sh-n"></div>
+      <div><h2 id="sh-t"></h2><p id="sh-s"></p><div class="chips" id="sh-c"></div></div>
+      <button class="x" id="close" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="sbody" id="sh-b"></div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s),ic=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
+const fmt=(d,o)=>d.toLocaleDateString('en-US',o),p2=n=>String(n).padStart(2,'0');
+const X={};
+const load=(s,y)=>s.trim().split('\n').forEach(l=>{const[a,t,...n]=l.trim().split(' '),[m,d]=a.split('/'),k=(y?y+'-':'')+m+'-'+d;(X[k]=X[k]||[]).push({n:n.join(' '),t:t[0],bn:t.length>1||'wb'.includes(t[0])})});
+let scope='all';const vis=x=>scope=='all'||x.bn;
+const TL={g:'Public holiday',w:'West Bengal holiday',r:'Optional holiday',b:'Bengali festival',f:'Festival',o:'Observance'},ORD={g:0,w:1,r:2,b:3,f:4,o:5};
+/* g = gazetted, r = restricted (DoPT), f = other festival, o = observance. Fixed dates repeat every year. */
+load(`1/1 r New Year’s Day
+1/9 o Pravasi Bharatiya Diwas
+1/12 w Swami Vivekananda Jayanti (National Youth Day)
+1/13 f Lohri
+1/15 o Army Day
+1/23 w Netaji Jayanti (Parakram Diwas)
+1/24 o National Girl Child Day
+1/25 o National Voters’ Day
+1/26 g* Republic Day
+1/30 o Martyrs’ Day
+2/28 o National Science Day
+3/8 o International Women’s Day
+3/23 o Shaheed Diwas
+4/14 w Ambedkar Jayanti
+4/24 o National Panchayati Raj Day
+5/1 w May Day (Labour Day)
+5/11 o National Technology Day
+6/5 o World Environment Day
+6/21 o International Yoga Day
+7/1 o* National Doctors’ Day (B. C. Roy Jayanti)
+7/26 o Kargil Vijay Diwas
+8/9 o Quit India Day
+8/15 g* Independence Day
+8/23 o National Space Day
+8/29 o National Sports Day
+9/5 o Teachers’ Day
+9/14 o Hindi Diwas
+9/15 o Engineers’ Day
+10/2 g* Gandhi Jayanti
+10/8 o Indian Air Force Day
+10/31 o National Unity Day
+11/14 o Children’s Day
+11/26 o Constitution Day
+12/4 o Navy Day
+12/7 o Armed Forces Flag Day
+12/16 o Vijay Diwas
+12/23 o Kisan Diwas
+4/14 b Charak Puja / Gajan
+4/15 w Poila Boishakh (Bengali New Year)
+5/2 o* Satyajit Ray Jayanti
+5/9 w Rabindra Jayanti (25 Boishakh)
+6/20 o* Paschimbanga Divas
+8/7 o* Tagore Death Anniversary (Baishe Srabon)
+9/17 w Viswakarma Puja
+9/26 o* Vidyasagar Jayanti
+12/24 r Christmas Eve
+12/25 g* Christmas Day`);
+/* 2026: DoPT OM of 3 Jul 2025. 2027: DoPT OM of 16 Jul 2026. Moon-sighting dates can shift by a day. */
+load(`1/3 r Hazarat Ali’s Birthday
+1/14 r* Makar Sankranti
+1/14 r Magha Bihu / Pongal
+1/23 r Basant Panchami
+2/1 r Guru Ravi Das’s Birthday
+2/12 r Swami Dayananda Saraswati’s Birthday
+2/15 r* Maha Shivratri
+2/19 r Shivaji Jayanti
+3/3 r Holika Dahan / Dolyatra
+3/4 g* Holi
+3/19 r Ugadi / Gudi Padwa
+3/20 r Jamat-Ul-Vida
+3/21 g* Id-ul-Fitr
+3/26 g* Ram Navami
+3/31 g* Mahavir Jayanti
+4/3 g* Good Friday
+4/5 r Easter Sunday
+4/14 r Vaisakhi / Vishu / Meshadi
+4/15 r Vaisakhadi / Bahag Bihu
+4/19 f Akshaya Tritiya
+5/1 g* Buddha Purnima
+5/27 g* Id-ul-Zuha (Bakrid)
+6/26 g* Muharram
+7/16 r* Rath Yatra
+7/29 f Guru Purnima
+8/15 r Parsi New Year / Nauroz
+8/26 g* Milad-un-Nabi (Id-e-Milad)
+8/26 r Onam
+8/28 r* Raksha Bandhan
+9/4 g* Janmashtami
+9/14 r Ganesh Chaturthi
+10/11 f Sharad Navratri begins
+10/18 r Dussehra (Saptami)
+10/19 r Dussehra (Mahashtami)
+10/20 g Dussehra (Vijaya Dashami)
+10/20 r Dussehra (Mahanavami)
+10/26 r Maharishi Valmiki’s Birthday
+10/29 r Karwa Chauth
+11/8 g Diwali (Deepavali)
+11/8 r Naraka Chaturdashi
+11/9 r Govardhan Puja
+11/11 r Bhai Dooj
+11/15 r Chhath Puja
+11/24 g* Guru Nanak Jayanti
+11/24 r Guru Teg Bahadur’s Martyrdom Day
+11/24 f Kartik Purnima (Dev Deepawali)
+12/23 r Hazarat Ali’s Birthday
+1/22 w Day before Saraswati Puja
+1/23 w Saraswati Puja (Sree Panchami)
+2/4 w Shab-e-Barat
+2/14 w Birthday of Thakur Panchanan Barma
+3/3 w Dol Jatra
+3/3 b Chaitanya Mahaprabhu Jayanti (Gaur Purnima)
+3/17 w Birthday of Harichand Thakur
+3/20 w Day before Id-ul-Fitr
+4/4 r Easter Saturday (Christians)
+5/26 w Day before Id-ul-Zuha
+6/30 r Hul Diwas (Santhal community)
+7/13 w Birthday of Poet Bhanu Bhakt (Darjeeling and Kalimpong)
+7/24 b Ulto Rath (Bahuda Yatra)
+8/26 w Fateha-Dwaz-Daham
+10/10 w Mahalaya
+10/15 w Durga Puja: Maha Chaturthi
+10/16 w Durga Puja: Maha Panchami
+10/17 w Durga Puja: Maha Shashthi
+10/18 w Durga Puja: Maha Saptami
+10/19 w Durga Puja: Maha Ashtami
+10/20 w Durga Puja: Maha Nabami
+10/21 w Durga Puja: Bijoya Dashami
+10/22 w Additional day for Durga Puja
+10/23 w Additional day for Durga Puja
+10/24 w Additional day for Durga Puja
+10/25 w Kojagari Lakshmi Puja
+10/26 w Additional day for Lakshmi Puja
+11/8 w Kali Puja
+11/9 w Additional day for Kali Puja
+11/10 w Additional day for Kali Puja
+11/11 w Bhai Phonta (Bhratridwitiya)
+11/12 w Day after Bhratridwitiya
+11/15 w Chhath Puja
+11/15 w Birsa Munda Jayanti
+11/16 w Additional day for Chhath Puja
+11/18 b Jagaddhatri Puja (Chandannagar)`,2026);
+load(`1/14 r Makar Sankranti / Magha Bihu
+1/15 r Pongal / Guru Gobind Singh’s Birthday
+2/11 r Basant Panchami
+2/19 r Shivaji Jayanti
+2/20 r Guru Ravi Das’s Birthday
+3/2 r Swami Dayananda Saraswati’s Birthday
+3/5 r Jamat-Ul-Vida
+3/6 r* Maha Shivratri
+3/10 g* Id-ul-Fitr
+3/22 r Holika Dahan / Dolyatra
+3/23 g* Holi
+3/26 g* Good Friday
+3/28 r Easter Sunday
+4/7 r Ugadi / Gudi Padwa / 1st Navratra
+4/14 r Vaisakhi / Vishu / Meshadi
+4/15 g* Ram Navami
+4/15 r Vaisakhadi / Bahag Bihu
+4/19 g* Mahavir Jayanti
+4/20 f Hanuman Jayanti
+5/17 g* Id-ul-Zuha (Bakrid)
+5/20 g* Buddha Purnima
+6/16 g* Muharram
+7/5 r* Rath Yatra
+7/18 f Guru Purnima
+8/15 g* Milad-un-Nabi (Id-e-Milad)
+8/15 r Parsi New Year / Nauroz
+8/17 r* Raksha Bandhan
+8/25 g* Janmashtami
+9/4 r Ganesh Chaturthi
+9/12 r Onam
+10/6 r* Dussehra (Saptami)
+10/7 r* Dussehra (Mahashtami)
+10/8 r* Dussehra (Mahanavami)
+10/9 g* Dussehra (Vijaya Dashami)
+10/15 r Maharishi Valmiki’s Birthday
+10/18 r Karwa Chauth
+10/28 r Naraka Chaturdashi
+10/29 g Diwali (Deepavali)
+10/30 r Govardhan Puja
+10/31 r Bhai Dooj
+11/4 r Chhath Puja
+11/14 g* Guru Nanak Jayanti
+11/24 r Guru Teg Bahadur’s Martyrdom Day
+12/9 f Gita Jayanti
+12/12 r Hazarat Ali’s Birthday
+2/11 b Saraswati Puja (Sree Panchami)
+3/10 b Sri Ramakrishna Jayanti
+3/22 b Dol Jatra
+3/22 b Chaitanya Mahaprabhu Jayanti (Gaur Purnima)
+7/13 b Ulto Rath (Bahuda Yatra)
+9/29 b Mahalaya (expected)
+10/5 b Durga Puja: Maha Shashthi (expected)
+10/28 b Kali Puja (expected)
+11/7 b Jagaddhatri Puja (Chandannagar)`,2027);
+const HI={'1-12':['Swami Vivekananda was born (1863)'],'1-15':['K. M. Cariappa became the first Indian Commander-in-Chief (1949)'],'1-23':['Subhas Chandra Bose was born (1897)'],'1-26':['Constitution of India came into force (1950)'],'1-30':['Mahatma Gandhi was assassinated (1948)'],'2-28':['C. V. Raman announced the Raman effect (1928)'],'3-12':['The Dandi March began (1930)'],'3-23':['Bhagat Singh, Sukhdev and Rajguru were executed (1931)'],'4-13':['Jallianwala Bagh massacre (1919)'],'4-14':['B. R. Ambedkar was born (1891)'],'4-19':['Aryabhata, India’s first satellite, was launched (1975)'],'5-11':['Pokhran-II nuclear tests (1998)'],'7-23':['Bal Gangadhar Tilak (1856) and Chandra Shekhar Azad (1906) were born'],'7-26':['The Kargil War ended (1999)'],'8-9':['The Quit India Movement was launched (1942)'],'8-15':['India gained independence (1947)'],'8-23':['Chandrayaan-3 landed near the lunar south pole (2023)'],'8-29':['Major Dhyan Chand was born (1905)'],'9-5':['Dr. S. Radhakrishnan was born (1888)'],'9-24':['Mangalyaan entered Mars orbit (2014)'],'9-28':['Bhagat Singh was born (1907)'],'10-2':['Mahatma Gandhi was born (1869)'],'10-15':['A. P. J. Abdul Kalam was born (1931)'],'10-31':['Sardar Vallabhbhai Patel was born (1875)'],'11-5':['Mangalyaan was launched (2013)'],'11-7':['C. V. Raman was born (1888)'],'11-14':['Jawaharlal Nehru was born (1889)'],'11-19':['Indira Gandhi was born (1917)'],'11-26':['The Constitution of India was adopted (1949)'],'12-16':['Pakistan’s forces surrendered in the 1971 war'],'12-25':['Madan Mohan Malaviya (1861) and Atal Bihari Vajpayee (1924) were born']};
+const HI2={'5-2':['Satyajit Ray was born (1921)'],'5-7':['Rabindranath Tagore was born (1861); his birthday is celebrated on 25 Boishakh'],'5-24':['Kazi Nazrul Islam was born (1899)'],'6-20':['The Bengal Legislative Assembly voted on partition (1947), marked as Paschimbanga Divas'],'7-1':['Dr. Bidhan Chandra Roy was born (1882) and died (1962)'],'8-7':['The Swadeshi movement was formally launched (1905); Tagore died (1941)'],'8-29':['Kazi Nazrul Islam died (1976)'],'9-26':['Ishwar Chandra Vidyasagar was born (1820)'],'10-16':['The first Partition of Bengal took effect (1905)'],'11-13':['Tagore’s Nobel Prize in Literature was announced (1913)']};
+for(const k in HI2)HI[k]=(HI[k]||[]).concat(HI2[k]);
+const SE=[['Winter','flake'],['Winter','flake'],['Spring','sprout'],['Spring','sprout'],['Summer','sun'],['Summer','sun'],['Monsoon','rain'],['Monsoon','rain'],['Autumn','leaf'],['Autumn','leaf'],['Pre-winter','wind'],['Pre-winter','wind']];
+const ev=(y,m,d)=>[...(X[`${m}-${d}`]||[]),...(X[`${y}-${m}-${d}`]||[])].sort((a,b)=>ORD[a.t]-ORD[b.t]);
+const day0=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const diff=(a,b)=>Math.round((a-b)/864e5);
+const rel=n=>n==0?'Today':n==1?'Tomorrow':n==-1?'Yesterday':n>0?`In ${n} days`:`${-n} days ago`;
+const doy=d=>diff(day0(d),new Date(d.getFullYear(),0,0));
+const ylen=y=>y%4==0&&(y%100!=0||y%400==0)?366:365;
+const wk=d=>{const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())),n=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-n);return Math.ceil(((t-Date.UTC(t.getUTCFullYear(),0,1))/864e5+1)/7)};
+
+const bng=d=>d.getFullYear()-(d>=new Date(d.getFullYear(),3,15)?593:594);
+const SM=[['Magha',1,21],['Phalguna',2,20],['Chaitra',3,22],['Vaisakha',4,21],['Jyaishtha',5,22],['Ashadha',6,22],['Sravana',7,23],['Bhadra',8,23],['Asvina',9,23],['Kartika',10,23],['Agrahayana',11,22],['Pausha',12,22]];
+function saka(d){const y=d.getFullYear(),a=SM.map(([n,m,k],j)=>[n,new Date(y,m-1,j==2&&ylen(y)==366?21:k)]);let c=null;a.forEach(x=>{if(d>=x[1])c=x});if(!c)c=['Pausha',new Date(y-1,11,22)];return `${c[0]} ${diff(day0(d),c[1])+1}, ${d>=a[2][1]?y-78:y-79}`}
+const hm=m=>{m=Math.round(m);const h=Math.floor(m/60)%24;return `${h%12||12}:${p2(m%60)} ${h<12?'am':'pm'}`};
+function sun(d){const r=Math.PI/180,la=28.6139*r,g=2*Math.PI/365*(doy(d)-1),q=229.18*(.000075+.001868*Math.cos(g)-.032077*Math.sin(g)-.014615*Math.cos(2*g)-.040849*Math.sin(2*g)),dc=.006918-.399912*Math.cos(g)+.070257*Math.sin(g)-.006758*Math.cos(2*g)+.000907*Math.sin(2*g)-.002697*Math.cos(3*g)+.00148*Math.sin(3*g),ha=Math.acos(Math.cos(90.833*r)/(Math.cos(la)*Math.cos(dc))-Math.tan(la)*Math.tan(dc))/r;return[720-4*(77.209+ha)-q+330,720-4*(77.209-ha)-q+330]}
+const dlen=s=>{const m=Math.round(s[1]-s[0]);return `${Math.floor(m/60)}h ${m%60}m`};
+const SY=29.530588853,MN=['New moon','Waxing crescent','First quarter','Waxing gibbous','Full moon','Waning gibbous','Last quarter','Waning crescent'];
+function moon(d){const age=((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate(),6,30)/864e5+2440587.5-2451550.1)%SY+SY)%SY,p=age/SY,i=Math.floor(p*8+.5)%8;let name=MN[i];if(i==0&&Math.min(age,SY-age)>=.5)name=p<.5?MN[1]:MN[7];if(i==4&&Math.abs(age-SY/2)>=.5)name=p<.5?MN[3]:MN[5];return{name,ill:Math.round((1-Math.cos(2*Math.PI*p))/2*100)}}
+
+const app=$('#app'),grid=$('#grid'),scrim=$('#scrim'),dock=$('#dock');
+let now=new Date(),cur=new Date(now.getFullYear(),now.getMonth(),1);
+
+function render(dir){
+  const y=cur.getFullYear(),m=cur.getMonth(),t=day0(new Date()),first=cur.getDay(),n=new Date(y,m+1,0).getDate();
+  $('#ttl').innerHTML=`${fmt(cur,{month:'long'})}<small>${y}</small>`;
+  let h='';
+  for(let i=0;i<first;i++)h+='<span></span>';
+  for(let d=1;d<=n;d++){
+    const dt=new Date(y,m,d),e=ev(y,m+1,d).filter(vis),idx=first+d-1,isT=+dt==+t;
+    h+=`<button class="day${isT?' today':''}${dt.getDay()==0?' sun':''}" data-d="${d}" style="--i:${Math.floor(idx/7)+idx%7}" aria-label="${fmt(dt,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}${e.length?', '+e.map(x=>x.n).join(', '):''}">${d}${e.length?`<i class="dot ${e[0].t}"></i>`:''}</button>`;
+  }
+  grid.innerHTML=h;
+  monthList();
+  $('#tb').classList.toggle('show',y!=t.getFullYear()||m!=t.getMonth());
+  if(dir){grid.classList.remove('s-n','s-p');void grid.offsetWidth;grid.classList.add(dir>0?'s-n':'s-p')}
+}
+const go=n=>{cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);render(n)};
+$('#prev').onclick=()=>go(-1);$('#next').onclick=()=>go(1);
+$('#tb').onclick=()=>{const t=new Date(),n=t.getFullYear()*12+t.getMonth()-(cur.getFullYear()*12+cur.getMonth());cur=new Date(t.getFullYear(),t.getMonth(),1);render(Math.sign(n))};
+
+function openDay(y,m,d){
+  if(cur.getFullYear()!=y||cur.getMonth()!=m){cur=new Date(y,m,1);render()}
+  grid.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));
+  grid.querySelector(`[data-d="${d}"]`)?.classList.add('sel');
+  const dt=new Date(y,m,d),e=ev(y,m+1,d),hi=HI[`${m+1}-${d}`]||[],s=SE[m];
+  $('#sh-n').textContent=d;
+  $('#sh-t').textContent=fmt(dt,{weekday:'long'});
+  $('#sh-s').textContent=fmt(dt,{month:'long',year:'numeric'});
+  const sk=saka(dt),su=sun(dt),mo=moon(dt);
+  $('#sh-c').innerHTML=`<span class="chip">${rel(diff(dt,day0(new Date())))}</span><span class="chip">Day ${doy(dt)} of ${ylen(y)}</span><span class="chip">Week ${wk(dt)}</span><span class="chip">Saka ${sk}</span><span class="chip">Bangabda ${bng(dt)}</span>`;
+  $('#sh-b').innerHTML=
+   `<div class="blk">${ic(s[1])}<div><h3>Season</h3><ul><li>${s[0]}</li></ul></div></div>`+
+   `<div class="blk">${ic('sun')}<div><h3>Sun in New Delhi</h3><ul><li>Rise ${hm(su[0])}, set ${hm(su[1])}</li><li class="mut">${dlen(su)} of daylight</li></ul></div></div>`+
+   `<div class="blk">${ic('moon')}<div><h3>Moon</h3><ul><li>${mo.name}, ${mo.ill}% lit</li></ul></div></div>`+
+   `<div class="blk">${ic('star')}<div><h3>Holidays, festivals and observances</h3>${e.length?`<ul>${e.map(x=>`<li>${x.n}<span class="tag ${x.t}">${TL[x.t]}</span></li>`).join('')}</ul>`:'<p class="mut">Nothing marked on this day.</p>'}</div></div>`+
+   (hi.length?`<div class="blk">${ic('book')}<div><h3>On this day in history</h3><ul>${hi.map(x=>`<li>${x}</li>`).join('')}</ul></div></div>`:'')+
+   '<p class="mut fine">Sun and moon values are calculated for New Delhi, not taken from a panchang.</p>';
+  scrim.classList.add('open');app.inert=true;$('#close').focus();
+}
+function closeDay(){if(!scrim.classList.contains('open'))return;scrim.classList.remove('open');app.inert=false;(grid.querySelector('.sel')||$('#theme')).focus()}
+grid.onclick=e=>{const b=e.target.closest('.day');if(b)openDay(cur.getFullYear(),cur.getMonth(),+b.dataset.d)};
+$('#close').onclick=closeDay;
+scrim.onclick=e=>{if(e.target==scrim)closeDay()};
+
+const rowH=(d,n,sub,t)=>`<button class="row" data-t="${+d}"><span class="badge">${d.getDate()}<small>${fmt(d,{month:'short'})}</small></span><div><b>${n}</b><em>${sub}</em></div><span class="tag ${t}">${TL[t]}</span></button>`;
+function upcoming(){
+  const t=day0(new Date());let h='',c=0;
+  for(let i=0;i<400&&c<6;i++){
+    const d=new Date(t.getFullYear(),t.getMonth(),t.getDate()+i);
+    ev(d.getFullYear(),d.getMonth()+1,d.getDate()).forEach(x=>{if(c<6&&x.t!='o'&&vis(x)){c++;h+=rowH(d,x.n,rel(i),x.t)}});
+  }
+  $('#up-list').innerHTML=h;
+}
+function monthList(){
+  const y=cur.getFullYear(),m=cur.getMonth(),n=new Date(y,m+1,0).getDate();let h='';
+  for(let d=1;d<=n;d++){const dt=new Date(y,m,d);ev(y,m+1,d).filter(vis).forEach(x=>{h+=rowH(dt,x.n,fmt(dt,{weekday:'long'}),x.t)})}
+  $('#mo-t').textContent='In '+fmt(cur,{month:'long'});$('#mo-list').innerHTML=h||'<p class="mut">Nothing marked this month.</p>';
+}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{scope=b.dataset.s;document.querySelectorAll('.seg button').forEach(x=>{x.classList.toggle('on',x==b);x.setAttribute('aria-pressed',x==b)});render();upcoming()});
+['#up-list','#mo-list'].forEach(s=>$(s).onclick=e=>{const b=e.target.closest('.row');if(b){const d=new Date(+b.dataset.t);openDay(d.getFullYear(),d.getMonth(),d.getDate())}});
+
+let sx=0,sy=0;
+grid.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+grid.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)go(dx<0?1:-1)},{passive:true});
+document.addEventListener('keydown',e=>{
+  if(e.key=='Escape')return closeDay();
+  if(!scrim.classList.contains('open')&&!$('#v-cal').hidden){if(e.key=='ArrowLeft')go(-1);if(e.key=='ArrowRight')go(1)}
+});
+
+/* Clock */
+let raf=0,lk=0;
+$('#ticks').innerHTML=Array.from({length:60},(_,i)=>`<line x1="100" y1="10" x2="100" y2="${i%5?15:22}" stroke="rgba(255,255,255,${i%5?.3:.85})" stroke-width="${i%5?1:2.5}" stroke-linecap="round" transform="rotate(${i*6} 100 100)"/>`).join('');
+const put=(el,v)=>{if(el.textContent!==v){el.textContent=v;return 1}};
+const rot=(id,a)=>$(id).setAttribute('transform',`rotate(${a} 100 100)`);
+function tick(){
+  const n=new Date(),h=n.getHours(),mi=n.getMinutes(),s=n.getSeconds(),ms=n.getMilliseconds(),secs=h*3600+mi*60+s;
+  if(n.getDate()!==lk){lk=n.getDate();const su=sun(n),mo=moon(n);$('#f-sk').textContent=saka(n);$('#f-sun').textContent=`${hm(su[0])}, ${hm(su[1])}`;$('#f-mn').textContent=`${mo.name}, ${mo.ill}%`;$('#f-bn').textContent=bng(n)}
+  rot('#ss',(s+ms/1000)*6);rot('#mh',(mi+s/60)*6);rot('#hh',(h%12+mi/60)*30);
+  put($('#hm'),`${p2(h%12||12)}:${p2(mi)}`);put($('#ap'),h<12?'AM':'PM');
+  if(put($('#sec'),p2(s))){const e=$('#sec');e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop')}
+  put($('#dl-b'),fmt(n,{weekday:'long'}));put($('#dl-s'),fmt(n,{month:'long',day:'numeric',year:'numeric'}));
+  const dp=secs/864,yp=(doy(n)-1+secs/86400)/ylen(n.getFullYear())*100;
+  $('#db').style.width=dp+'%';$('#yb').style.width=yp+'%';
+  put($('#dp'),Math.floor(dp)+'%');put($('#yp'),Math.floor(yp)+'%');put($('#yl'),n.getFullYear());
+  raf=requestAnimationFrame(tick);
+}
+
+/* Views and theme */
+function view(v){
+  const t=v=='time';
+  $('#v-cal').hidden=t;$('#v-time').hidden=!t;dock.dataset.v=v;
+  dock.querySelectorAll('button').forEach(b=>b.dataset.v==v?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  try{history.replaceState(null,'','#'+v)}catch(e){}
+  cancelAnimationFrame(raf);if(t)tick();
+}
+dock.onclick=e=>{const b=e.target.closest('button');if(b)view(b.dataset.v)};
+const tb=$('#theme');
+function theme(t,save){
+  document.documentElement.dataset.theme=t;tb.innerHTML=ic(t=='dark'?'sun':'moon');
+  tb.setAttribute('aria-label',t=='dark'?'Switch to light theme':'Switch to dark theme');
+  if(save)try{localStorage.setItem('hai-theme',t)}catch(e){}
+}
+tb.onclick=()=>{theme(document.documentElement.dataset.theme=='dark'?'light':'dark',1);tb.classList.remove('spin');void tb.offsetWidth;tb.classList.add('spin')};
+
+theme(document.documentElement.dataset.theme);
+render();upcoming();
+setTimeout(()=>grid.classList.remove('intro'),1200);
+view(location.hash=='#time'?'time':'cal');
+})();
+</script>
+</body>
+</html>
